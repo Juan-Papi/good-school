@@ -29,7 +29,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     try {
       final user = await authRepository.login(email, password);
-      final response = user;
       _setLoggedUser(user);
     } on CustomError catch (e) {
       logout(e.message);

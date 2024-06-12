@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teslo_shop/features/auth/auth.dart';
 import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
-import 'package:teslo_shop/features/products/products.dart';
+import 'package:teslo_shop/features/estudiantes/estudiantes.dart';
 
 import 'app_router_notifier.dart';
 
@@ -33,7 +33,7 @@ final goRouterProvider = Provider((ref) {
       ///* Product Routes
       GoRoute(
         path: '/',
-        builder: (context, state) => const ProductsScreen(),
+        builder: (context, state) => const EstudiantesScreen(),
       ),
     ],
 
