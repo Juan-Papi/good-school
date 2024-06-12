@@ -39,4 +39,32 @@ class EstudianteDatasourceImpl extends EstudianteDatasource {
       throw Exception('Error al procesar los datos: ${e.toString()}');
     }
   }
+
+  @override
+  Future<Estudiante> getStudentById(String id, String token) async {
+    try {
+      final response = await dio.get(
+        '/estudiante/$id', // Asegúrate de que la URL base termina sin '/'
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      if (response.data == null) {
+        throw Exception('No data available');
+      }
+
+      if (response.statusCode == 200 && response.data['success'] == true) {
+        // Usar el mapper para convertir los datos
+        return EstudianteMapper.estudianteJsonToEntity(
+            response.data['data'][0]);
+      } else {
+        throw Exception('Failed to load student data');
+      }
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw CustomError('Token incorrecto');
+      }
+      throw Exception('Error en la solicitud: ${e.message}');
+    } catch (e) {
+      throw Exception('Error al procesar los datos: ${e.toString()}');
+    }
+  }
 }

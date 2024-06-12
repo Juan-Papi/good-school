@@ -8,7 +8,8 @@ import 'package:teslo_shop/features/shared/infrastructure/services/key_value_sto
 
 //! 3
 final estudianteProvider =
-    StateNotifierProvider.autoDispose<EstudianteNotifier, EstudianteState>((ref) {
+    StateNotifierProvider.autoDispose<EstudianteNotifier, EstudianteState>(
+        (ref) {
   final estudianteRepository = EstudianteRepositoryImpl();
   final keyValueStorageService = KeyValueStorageServiceImpl();
   final authState = ref.watch(authProvider);
@@ -43,6 +44,12 @@ class EstudianteNotifier extends StateNotifier<EstudianteState> {
     return await estudianteRepository.getStudentsByTutor(authState.user!.token);
   }
 
+  Future<void> getEstudiante(String id) async {
+    var estudiante =
+        await estudianteRepository.getStudentById(id, authState.user!.token);
+    state = state.copyWith(estudiante: estudiante);
+  }
+
   Future<void> refreshStudents() async {
     final students = await getStudentsByTutor();
     state = state.copyWith(estudiantes: students);
@@ -51,16 +58,18 @@ class EstudianteNotifier extends StateNotifier<EstudianteState> {
 
 //! 1
 class EstudianteState {
+  final Estudiante? estudiante; // Estado para un estudiante individual
   final List<Estudiante>? estudiantes;
 
-  EstudianteState({
-    this.estudiantes,
-  });
+  EstudianteState({this.estudiante, this.estudiantes});
 
   EstudianteState copyWith({
+    Estudiante? estudiante,
     List<Estudiante>? estudiantes,
-  }) =>
-      EstudianteState(
-        estudiantes: estudiantes ?? this.estudiantes,
-      );
+  }) {
+    return EstudianteState(
+      estudiante: estudiante ?? this.estudiante,
+      estudiantes: estudiantes ?? this.estudiantes,
+    );
+  }
 }

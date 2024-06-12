@@ -5,8 +5,9 @@ class CardType3 extends StatelessWidget {
   final String? nombre;
   final String? edad;
   final String? tipoNota;
+  final String estudianteId;
 
-  const CardType3({super.key, this.nombre, this.edad, this.tipoNota});
+  const CardType3({super.key, this.nombre, this.edad, this.tipoNota,required this.estudianteId});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class CardType3 extends StatelessWidget {
       width: 335,
       child: GestureDetector(
         onTap: () {
-          context.push('/tipo-nota');
+          context.push('/tipo-nota/$estudianteId');
         },
         child: Card(
           color: colors.primary,

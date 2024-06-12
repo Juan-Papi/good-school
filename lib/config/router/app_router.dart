@@ -3,11 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:teslo_shop/features/auth/auth.dart';
 import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
 import 'package:teslo_shop/features/estudiantes/estudiantes.dart';
+import 'package:teslo_shop/features/estudiantes/presentation/screens/libreta_screen.dart';
+import 'package:teslo_shop/features/estudiantes/presentation/screens/tipo_nota_screen.dart';
 
 import 'app_router_notifier.dart';
 
 final goRouterProvider = Provider((ref) {
-
   final goRouterNotifier = ref.read(goRouterNotifierProvider);
 
   return GoRouter(
@@ -35,27 +36,45 @@ final goRouterProvider = Provider((ref) {
         path: '/',
         builder: (context, state) => const EstudiantesScreen(),
       ),
-    ],
+      GoRoute(
+        path: '/tipo-nota/:estudianteId',
+        name: TipoNotaScreen.name,
+        builder: (context, state) {
+          final estudianteId = state.params['estudianteId'] ?? 'no-id';
 
+          return TipoNotaScreen(estudianteId: estudianteId);
+        },
+      ),
+      GoRoute(
+        path: '/tipo-nota/libreta/:estudianteId',
+        name: LibretaScreen.name,
+        builder: (context, state) {
+          final estudianteId = state.params['estudianteId'] ?? 'no-id';
+
+          return LibretaScreen(estudianteId: estudianteId);
+        },
+      ),
+    ],
     redirect: (context, state) {
-      
       final isGoingTo = state.subloc;
       final authStatus = goRouterNotifier.authStatus;
 
-      if ( isGoingTo == '/splash' && authStatus == AuthStatus.checking ) return null;
+      if (isGoingTo == '/splash' && authStatus == AuthStatus.checking)
+        return null;
 
-      if ( authStatus == AuthStatus.notAuthenticated ) {
-        if ( isGoingTo == '/login' || isGoingTo == '/register' ) return null;
+      if (authStatus == AuthStatus.notAuthenticated) {
+        if (isGoingTo == '/login' || isGoingTo == '/register') return null;
 
         return '/login';
       }
 
-      if ( authStatus == AuthStatus.authenticated ) {
-        if ( isGoingTo == '/login' || isGoingTo == '/register' || isGoingTo == '/splash' ){
-           return '/';
+      if (authStatus == AuthStatus.authenticated) {
+        if (isGoingTo == '/login' ||
+            isGoingTo == '/register' ||
+            isGoingTo == '/splash') {
+          return '/';
         }
       }
-
 
       return null;
     },

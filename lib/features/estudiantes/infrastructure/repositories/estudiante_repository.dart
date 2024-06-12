@@ -11,4 +11,9 @@ class EstudianteRepositoryImpl extends EstudianteRepository {
   Future<List<Estudiante>> getStudentsByTutor(String token) {
     return datasource.getStudentsByTutor(token);
   }
+
+  @override
+  Future<Estudiante> getStudentById(String id, String token) {
+    return datasource.getStudentById(id, token);
+  }
 }

@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.teslo_shop">
    <application
+        android:enableOnBackInvokedCallback="true"
         android:label="teslo_shop"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

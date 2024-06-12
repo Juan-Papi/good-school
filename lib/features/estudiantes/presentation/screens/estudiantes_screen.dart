@@ -87,6 +87,7 @@ class _EstudiantesView extends StatelessWidget {
             (estudiante) => CardType3(
               nombre: '${estudiante.nombre} ${estudiante.apellido}',
               edad: estudiante.edad,
+              estudianteId: estudiante.id.toString(),
             ),
           ),
         ],
