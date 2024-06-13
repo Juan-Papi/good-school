@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/estudiantes/domain/entities/subnota.dart';
 import 'package:teslo_shop/features/estudiantes/presentation/providers/estudiante_provider.dart';
 
-class LibretaView extends ConsumerWidget {
+class LibretaView extends StatelessWidget {
   final String estudianteId;
-  const LibretaView({super.key, required this.estudianteId});
+  final EstudianteState estudianteState;
+  const LibretaView(
+      {super.key, required this.estudianteId, required this.estudianteState});
 
   @override
-  Widget build(BuildContext context, ref) {
-    // Ensure data is loaded when the widget is initialized
-    ref.read(estudianteProvider.notifier).getEstudiante(estudianteId);
-    ref.read(estudianteProvider.notifier).getSubnotas(estudianteId);
-
-    // Listen for changes in the student data
-    final estudianteState = ref.watch(estudianteProvider);
+  Widget build(BuildContext context) {
+    // Ensure data is loaded when the widget is initializ
     if (estudianteState.subnotas != null &&
         estudianteState.subnotas!.isNotEmpty) {
       return SingleChildScrollView(

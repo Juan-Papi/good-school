@@ -9,7 +9,8 @@ import 'package:teslo_shop/features/shared/infrastructure/services/key_value_sto
 
 //! 3
 final estudianteProvider =
-    StateNotifierProvider<EstudianteNotifier, EstudianteState>((ref) {
+    StateNotifierProvider.autoDispose<EstudianteNotifier, EstudianteState>(
+        (ref) {
   final estudianteRepository = EstudianteRepositoryImpl();
   final keyValueStorageService = KeyValueStorageServiceImpl();
   final authState = ref.watch(authProvider);
@@ -49,13 +50,15 @@ class EstudianteNotifier extends StateNotifier<EstudianteState> {
     await Future.delayed(const Duration(milliseconds: 500));
     if (authState.authStatus != AuthStatus.authenticated ||
         authState.user == null) {
-      // No autenticado o no hay información de usuario
       return;
     }
+
     var estudiante =
         await estudianteRepository.getStudentById(id, authState.user!.token);
     if (mounted) {
-      state = state.copyWith(estudiante: estudiante);
+      state = EstudianteState(
+          estudiante:
+              estudiante); // Reiniciar el estado con solo el estudiante actual esto es clave!!!!
     }
   }
 
@@ -69,6 +72,7 @@ class EstudianteNotifier extends StateNotifier<EstudianteState> {
     var subnotas = await estudianteRepository.getLibretaByEstudianteId(
         id, authState.user!.token);
     if (mounted) {
+      //forma original
       state = state.copyWith(subnotas: subnotas);
     }
   }

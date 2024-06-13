@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:teslo_shop/features/estudiantes/presentation/views/estudiante/tipo_nota_view.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
 
@@ -33,7 +34,7 @@ class TipoNotaScreenState extends ConsumerState<TipoNotaScreen> {
             ),
             IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.pop();
                 },
                 icon: const Icon(Icons.arrow_back_ios_new_outlined))
           ],
@@ -41,10 +42,5 @@ class TipoNotaScreenState extends ConsumerState<TipoNotaScreen> {
       ),
       body: TipoNotaView(estudianteId: widget.estudianteId),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

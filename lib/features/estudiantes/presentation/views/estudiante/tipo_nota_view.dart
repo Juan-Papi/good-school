@@ -3,16 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teslo_shop/features/estudiantes/presentation/providers/estudiante_provider.dart';
 
-class TipoNotaView extends ConsumerWidget {
+class TipoNotaView extends ConsumerStatefulWidget {
   final String estudianteId;
   const TipoNotaView({Key? key, required this.estudianteId}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colors = Theme.of(context).colorScheme;
-    // Asegurar que el estudiante se carga al iniciar el widget
-    ref.read(estudianteProvider.notifier).getEstudiante(estudianteId);
+  TipoNotaViewState createState() => TipoNotaViewState();
+}
 
+class TipoNotaViewState extends ConsumerState<TipoNotaView> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(estudianteProvider.notifier).getEstudiante(widget.estudianteId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     // Escuchar los cambios en el estudiante
     final estudianteState = ref.watch(estudianteProvider);
 
@@ -21,14 +29,14 @@ class TipoNotaView extends ConsumerWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
+            Center(
               child: SizedBox(
                 height: 200,
                 width: 335,
                 child: GestureDetector(
                   onTap: () {
-                    context.push('/tipo-nota/libreta/${estudianteState.estudiante!.id}');
+                    context.push(
+                        '/tipo-nota/libreta/${estudianteState.estudiante!.id}');
                   },
                   child: Card(
                     color: colors.primary,
