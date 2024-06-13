@@ -7,6 +7,7 @@ class LibretaMapper {
         subnota: json['nota'] as double, // Changed from 'subnota' to 'nota'
         numero: (json['numero'] as num).toDouble(),
         curso: json['curso_nombre'] as String,
+        modalidad: json['modalidad'] as String,
         materia: json['materia_nombre'] as String,
         paralelo: json['curso_paralelo'] as String,
         year: json['year'].toString(),

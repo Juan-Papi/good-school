@@ -55,7 +55,7 @@ class LibretaView extends ConsumerWidget {
                   defaultColumnWidth: const IntrinsicColumnWidth(),
                   border: TableBorder.all(),
                   children: [
-                    const TableRow(
+                    TableRow(
                       children: [
                         Padding(
                           padding: EdgeInsets.all(8.0),
@@ -66,7 +66,7 @@ class LibretaView extends ConsumerWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: Text('1er Bimestre',
+                          child: Text('1er ${estudianteState.subnotas!.first.modalidad}',
                               style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
                         Padding(

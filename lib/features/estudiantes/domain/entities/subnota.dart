@@ -8,6 +8,7 @@ class Subnota {
   final String year;
   final String estudiante;
   final String promedio;
+  final String modalidad;
 
   Subnota(
       {required this.id,
@@ -18,5 +19,6 @@ class Subnota {
       required this.paralelo,
       required this.year,
       required this.estudiante,
-      required this.promedio});
+      required this.promedio,
+      required this.modalidad});
 }
