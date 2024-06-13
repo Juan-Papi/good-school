@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:teslo_shop/features/estudiantes/domain/entities/subnota.dart';
 import 'package:teslo_shop/features/estudiantes/presentation/providers/estudiante_provider.dart';
 
 class LibretaView extends ConsumerWidget {
@@ -8,92 +9,28 @@ class LibretaView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    // Asegurar que el estudiante se carga al iniciar el widget
+    // Ensure data is loaded when the widget is initialized
     ref.read(estudianteProvider.notifier).getEstudiante(estudianteId);
     ref.read(estudianteProvider.notifier).getSubnotas(estudianteId);
-    // Escuchar los cambios en el estudiante
+
+    // Listen for changes in the student data
     final estudianteState = ref.watch(estudianteProvider);
-    if (estudianteState.subnotas != null) {
+    if (estudianteState.subnotas != null &&
+        estudianteState.subnotas!.isNotEmpty) {
       return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  const Text(
-                    'Estudiante: ',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  Expanded(
-                    child: Text(
-                      '${estudianteState.estudiante!.nombre} ${estudianteState.estudiante!.apellido}',
-                      style: const TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Text(
-                    'Año de escolaridad: ',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  Expanded(
-                    child: Text(
-                        '${estudianteState.subnotas!.first.curso}  ${estudianteState.subnotas!.first.paralelo} - ${estudianteState.subnotas!.first.year}',
-                        style: const TextStyle(fontSize: 15)),
-                  ),
-                ],
-              ),
+              _buildStudentInfoSection(estudianteState),
               const SizedBox(height: 35),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Table(
                   defaultColumnWidth: const IntrinsicColumnWidth(),
                   border: TableBorder.all(),
-                  children: [
-                    TableRow(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            'Áreas Curriculares',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('1er ${estudianteState.subnotas!.first.modalidad}',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('2do Bimestre',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('3er Bimestre',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('Promedio',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                    ),
-                    _buildRow('Ciencias Sociales', '85', '87', '86', '80'),
-                    _buildRow('Educación Física', '90', '92', '91', '90'),
-                    _buildRow('Matemáticas', '78', '80', '79', '30'),
-                    _buildRow('Ciencias Naturales', '88', '85', '87', '20'),
-                    _buildRow('Tecnología', '92', '90', '91', '70'),
-                    _buildRow('Comunicación', '75', '77', '76', '70'),
-                    _buildRow('Música', '80', '82', '81', '75'),
-                  ],
+                  children: _buildTableRows(estudianteState.subnotas!),
                 ),
               ),
             ],
@@ -105,18 +42,93 @@ class LibretaView extends ConsumerWidget {
     }
   }
 
-  TableRow _buildRow(String subject, String first, String second, String third,
-      String average) {
-    return TableRow(
+  List<TableRow> _buildTableRows(List<Subnota> subnotas) {
+    // Create a header row first
+    List<TableRow> rows = [
+      const TableRow(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('AREAS CURRICULARES',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('MODALIDAD',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('CALIFICACION',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('PROMEDIO ANUAL',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+        ],
+      )
+    ];
+
+    // Add a row for each Subnota
+    for (var subnota in subnotas) {
+      rows.add(TableRow(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('${subnota.materia}'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('${subnota.modalidad} ${subnota.numero.toInt()}'),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('${subnota.subnota}'),
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                  '${subnota.promedio}'), // Placeholder for actual average calculation
+            ),
+          ),
+        ],
+      ));
+    }
+
+    return rows;
+  }
+
+  Widget _buildStudentInfoSection(EstudianteState state) {
+    return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(subject),
+        Row(
+          children: [
+            const Text('Estudiante: ',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            Expanded(
+              child: Text(
+                  '${state.estudiante!.nombre} ${state.estudiante!.apellido}',
+                  style: const TextStyle(fontSize: 15)),
+            ),
+          ],
         ),
-        Center(child: Text(first)),
-        Center(child: Text(second)),
-        Center(child: Text(third)),
-        Center(child: Text(average)),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            const Text('Año de escolaridad: ',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            Expanded(
+              child: Text(
+                  '${state.subnotas!.first.curso} ${state.subnotas!.first.paralelo} - ${state.subnotas!.first.year}',
+                  style: const TextStyle(fontSize: 15)),
+            ),
+          ],
+        ),
       ],
     );
   }
