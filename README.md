@@ -1,22 +1,14 @@
-# Flutter - Authenticated CRUD App - TesloShop
+# Flutter Levantar App
 
-Este es un proyecto para trabajar con:
+# 1. Variables de entorno
+Clonar  el .env.template y nombra .env y llenar los datos con la url de la API
 
-* Cámara
-* Tokens de acceso
-* CRUD (Create Read Update Delete) Rest API Endpoints
-* Riverpod
-* GoRouter
+# 2. Instalar dependecias de flutter 
+'''
+flutter pub get
+'''
 
+# 3. Finalmente correr la app
 
-## El backend lo pueden obtener de aquí
-
-[Teslo Backend - Nest RestServer](https://hub.docker.com/repository/docker/klerith/flutter-backend-teslo-shop/general)
-
-
-# Importante
-Recuerden leer y seguir la guía para montar el backend localmente.
-
-También creen el archivo __.env__ basado en el __.env.template__ y coloquen su dirección IP, si es Android específicamente lo que van a emular
-
-
+Dirigirse al archivo main.dart y darle run, previamente seleccionado el dispositivo donde se correra, puede seleccion con ctrl + ship + p -> select
+device y escoger en cual dispositivo se ejecutará la app.
