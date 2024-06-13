@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 const colorSeed = Color(0xFF121212); // Casi negro
-const scaffoldBackgroundColor = Color(0xFFF8F7F7);
+const scaffoldBackgroundColor =Color(0xFFF8F7F7);
 
 class AppTheme {
 
