@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:teslo_shop/config/constants/environment.dart';
 import 'package:teslo_shop/features/auth/infrastructure/errors/auth_errors.dart';
 import 'package:teslo_shop/features/estudiantes/domain/domain.dart';
+import 'package:teslo_shop/features/estudiantes/domain/entities/subnota.dart';
 import 'package:teslo_shop/features/estudiantes/infrastructure/mappers/estudiante_mapper.dart';
+import 'package:teslo_shop/features/estudiantes/infrastructure/mappers/libreta_mapper.dart';
 
 class EstudianteDatasourceImpl extends EstudianteDatasource {
   final dio = Dio(BaseOptions(
@@ -58,6 +60,32 @@ class EstudianteDatasourceImpl extends EstudianteDatasource {
       } else {
         throw Exception('Failed to load student data');
       }
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw CustomError('Token incorrecto');
+      }
+      throw Exception('Error en la solicitud: ${e.message}');
+    } catch (e) {
+      throw Exception('Error al procesar los datos: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<List<Subnota>> getLibretaByEstudianteId(
+      String estudianteId, String token) async {
+    try {
+      final response = await dio.get(
+        '/students/subnotas/$estudianteId', // Ensure the base URL ends without '/'
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      if (response.data == null || response.data['data'] == null) {
+        throw Exception('No data available');
+      }
+
+      List<Subnota> subnotas = List<Subnota>.from(
+          (response.data['data'] as List)
+              .map((item) => LibretaMapper.estudianteJsonToEntity(item)));
+      return subnotas;
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
         throw CustomError('Token incorrecto');

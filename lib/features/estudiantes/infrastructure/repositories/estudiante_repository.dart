@@ -1,4 +1,5 @@
 import 'package:teslo_shop/features/estudiantes/domain/domain.dart';
+import 'package:teslo_shop/features/estudiantes/domain/entities/subnota.dart';
 import 'package:teslo_shop/features/estudiantes/infrastructure/datasources/estudiante_datasource_impl.dart';
 
 class EstudianteRepositoryImpl extends EstudianteRepository {
@@ -15,5 +16,11 @@ class EstudianteRepositoryImpl extends EstudianteRepository {
   @override
   Future<Estudiante> getStudentById(String id, String token) {
     return datasource.getStudentById(id, token);
+  }
+
+  @override
+  Future<List<Subnota>> getLibretaByEstudianteId(
+      String estudianteId, String token) {
+    return datasource.getLibretaByEstudianteId(estudianteId, token);
   }
 }

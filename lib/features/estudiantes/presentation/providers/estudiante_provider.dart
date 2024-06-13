@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
 import 'package:teslo_shop/features/estudiantes/domain/entities/estudiante.dart';
+import 'package:teslo_shop/features/estudiantes/domain/entities/subnota.dart';
 import 'package:teslo_shop/features/estudiantes/domain/repositories/estudiante_repository.dart';
 import 'package:teslo_shop/features/estudiantes/infrastructure/repositories/estudiante_repository.dart';
 import 'package:teslo_shop/features/shared/infrastructure/services/key_value_storage_service.dart';
@@ -45,9 +46,17 @@ class EstudianteNotifier extends StateNotifier<EstudianteState> {
   }
 
   Future<void> getEstudiante(String id) async {
+
     var estudiante =
         await estudianteRepository.getStudentById(id, authState.user!.token);
     state = state.copyWith(estudiante: estudiante);
+  }
+
+  Future<void> getSubnotas(String id) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    var subnotas = await estudianteRepository.getLibretaByEstudianteId(
+        id, authState.user!.token);
+    state = state.copyWith(subnotas: subnotas);
   }
 
   Future<void> refreshStudents() async {
@@ -60,16 +69,18 @@ class EstudianteNotifier extends StateNotifier<EstudianteState> {
 class EstudianteState {
   final Estudiante? estudiante; // Estado para un estudiante individual
   final List<Estudiante>? estudiantes;
+  final List<Subnota>? subnotas;
 
-  EstudianteState({this.estudiante, this.estudiantes});
+  EstudianteState({this.estudiante, this.estudiantes, this.subnotas});
 
   EstudianteState copyWith({
     Estudiante? estudiante,
     List<Estudiante>? estudiantes,
+    List<Subnota>? subnotas,
   }) {
     return EstudianteState(
-      estudiante: estudiante ?? this.estudiante,
-      estudiantes: estudiantes ?? this.estudiantes,
-    );
+        estudiante: estudiante ?? this.estudiante,
+        estudiantes: estudiantes ?? this.estudiantes,
+        subnotas: subnotas ?? this.subnotas);
   }
 }
