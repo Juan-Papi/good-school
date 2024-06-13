@@ -21,6 +21,11 @@ class EstudiantesScreenState extends ConsumerState<EstudiantesScreen> {
     futureEstudiantes = loadStudents();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Future<List<Estudiante>> loadStudents() {
     // Esta función carga los estudiantes y se llama en initState y durante el refresh
     return ref.read(estudianteProvider.notifier).getStudentsByTutor();

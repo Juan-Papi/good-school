@@ -27,19 +27,24 @@ class TipoNotaScreenState extends ConsumerState<TipoNotaScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            Text('Seleccione tipo'),
-            SizedBox(
+            const Text('Seleccione tipo'),
+            const SizedBox(
               width: 20,
             ),
             IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: Icon(Icons.arrow_back_ios_new_outlined))
+                icon: const Icon(Icons.arrow_back_ios_new_outlined))
           ],
         ),
       ),
       body: TipoNotaView(estudianteId: widget.estudianteId),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

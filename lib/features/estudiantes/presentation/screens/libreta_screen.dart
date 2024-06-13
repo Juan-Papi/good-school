@@ -7,6 +7,7 @@ import 'package:teslo_shop/features/shared/shared.dart';
 class LibretaScreen extends ConsumerWidget {
   static const name = 'libreta-screen';
   final String estudianteId;
+
   const LibretaScreen({Key? key, required this.estudianteId}) : super(key: key);
 
   @override
@@ -17,15 +18,14 @@ class LibretaScreen extends ConsumerWidget {
     // Escuchar los cambios en el estudiante
     final estudianteState = ref.watch(estudianteProvider);
     final scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
         drawer: SideMenu(scaffoldKey: scaffoldKey),
         appBar: AppBar(
           title: Row(
             children: [
               const Text('Libreta'),
-              const SizedBox(
-                width: 20,
-              ),
+              const SizedBox(width: 20),
               IconButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -34,8 +34,10 @@ class LibretaScreen extends ConsumerWidget {
             ],
           ),
         ),
-        body: LibretaView(
-          estudianteId: estudianteState.estudiante!.id.toString(),
-        ));
+        body: estudianteState.estudiante != null
+            ? LibretaView(
+                estudianteId: estudianteState.estudiante!.id.toString(),
+              )
+            : const Center(child: Text('No hay datos disponibles.')));
   }
 }

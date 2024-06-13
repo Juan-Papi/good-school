@@ -9,8 +9,7 @@ import 'package:teslo_shop/features/shared/infrastructure/services/key_value_sto
 
 //! 3
 final estudianteProvider =
-    StateNotifierProvider.autoDispose<EstudianteNotifier, EstudianteState>(
-        (ref) {
+    StateNotifierProvider<EstudianteNotifier, EstudianteState>((ref) {
   final estudianteRepository = EstudianteRepositoryImpl();
   final keyValueStorageService = KeyValueStorageServiceImpl();
   final authState = ref.watch(authProvider);
@@ -35,6 +34,7 @@ class EstudianteNotifier extends StateNotifier<EstudianteState> {
   }) : super(EstudianteState());
 
   Future<List<Estudiante>> getStudentsByTutor() async {
+    await Future.delayed(const Duration(milliseconds: 500));
     if (authState.authStatus != AuthStatus.authenticated ||
         authState.user == null) {
       // No autenticado o no hay información de usuario
@@ -46,22 +46,44 @@ class EstudianteNotifier extends StateNotifier<EstudianteState> {
   }
 
   Future<void> getEstudiante(String id) async {
-
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (authState.authStatus != AuthStatus.authenticated ||
+        authState.user == null) {
+      // No autenticado o no hay información de usuario
+      return;
+    }
     var estudiante =
         await estudianteRepository.getStudentById(id, authState.user!.token);
-    state = state.copyWith(estudiante: estudiante);
+    if (mounted) {
+      state = state.copyWith(estudiante: estudiante);
+    }
   }
 
   Future<void> getSubnotas(String id) async {
+    if (authState.authStatus != AuthStatus.authenticated ||
+        authState.user == null) {
+      // No autenticado o no hay información de usuario
+      return;
+    }
     await Future.delayed(const Duration(milliseconds: 500));
     var subnotas = await estudianteRepository.getLibretaByEstudianteId(
         id, authState.user!.token);
-    state = state.copyWith(subnotas: subnotas);
+    if (mounted) {
+      state = state.copyWith(subnotas: subnotas);
+    }
   }
 
   Future<void> refreshStudents() async {
+    if (authState.authStatus != AuthStatus.authenticated ||
+        authState.user == null) {
+      // No autenticado o no hay información de usuario
+      return;
+    }
+    await Future.delayed(const Duration(milliseconds: 500));
     final students = await getStudentsByTutor();
-    state = state.copyWith(estudiantes: students);
+    if (mounted) {
+      state = state.copyWith(estudiantes: students);
+    }
   }
 }
 
